@@ -77,14 +77,18 @@ const update = async (req, res, next) => {
   }
 }
 
-const deleteSingle = async (req, res, next) => {
+const uploadImage = async (req, res, next) => {
   try {
-    const { profileID } = req.params
+    const { _id } = req.params
+    const updatedProfile = await Profile.findByIdAndUpdate(_id, {image: req.file.path}, {
+      new: true
+    })
     
-    const DbRes = await Profile.destroy(profileID) 
+    delete updatedProfile._doc.password
+    delete updatedProfile._doc.experience
+    delete updatedProfile._doc.email
     
-    if (DbRes)
-    res.status(204).send()
+    res.status(200).send(updatedProfile)
     
   } catch (error) {
     next(error)
@@ -98,7 +102,7 @@ const profile = {
   getById: getById,
   login: login,
   update: update,
-  deleteSingle: deleteSingle
+  uploadImage: uploadImage
 }
 
 export default profile
