@@ -1,9 +1,10 @@
 import Profile from "../../db/models/Profile.js"
 import bcrypt from 'bcrypt'
 
-const getAll = async (req, res, next) => {
+const getById = async (req, res, next) => {
   try {
-    const profiles = await Profile.find({})
+    const {_id} = req.params
+    const profiles = await Profile.find({_id}, {password: 0, experience: 0})
     res.send(profiles)
   } catch (error) {
     next(error)
@@ -90,7 +91,7 @@ const deleteSingle = async (req, res, next) => {
 
 const profile = {
   register: register,
-  getAll: getAll,
+  getById: getById,
   login: login,
   update: update,
   deleteSingle: deleteSingle

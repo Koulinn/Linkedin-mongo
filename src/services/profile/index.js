@@ -4,8 +4,8 @@ import profile from "./profile-handlers.js"
 const router = express.Router()
 
 router
-  .route("/")
-  .get(profile.getAll)
+  .route("/:_id")
+  .get(profile.getById)
 
 router
   .route("/register")
