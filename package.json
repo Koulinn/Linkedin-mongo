@@ -1,0 +1,34 @@
+{
+  "name": "Linkedin-mongo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "cloudinary": "^1.26.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.3",
+    "multer": "^1.4.3",
+    "multer-storage-cloudinary": "^4.0.0"
+  },
+  "scripts": {
+    "start": "node ./server.js",
+    "dev": "nodemon -e js -r dotenv/config ./server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Koulinn/Linkedin-mongo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Koulinn/Linkedin-mongo/issues"
+  },
+  "homepage": "https://github.com/Koulinn/Linkedin-mongo#readme",
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "nodemon": "^2.0.12"
+  }
+}
