@@ -1,4 +1,5 @@
 import Profile from "../../db/models/Profile.js"
+import bcrypt from 'bcrypt'
 
 const getAll = async (req, res, next) => {
   try {
@@ -33,14 +34,24 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
-    const { username } = req.body
+    const { username, password } = req.body
     const usernameAlreadyExists = await Profile.find({username})
     if(usernameAlreadyExists.length > 0 ){
       res.status(400).send({msg: `Username ${username} already in use please choose another one.`})
     } else {
-      const newProfile = new Profile(req.body)
-      const DbRes = await newProfile.save({ new: true })
-      res.status(200).send(DbRes)
+      const hashedPassword = await bcrypt.hash(password, 10)
+      const newProfile = new Profile({...req.body, password: hashedPassword})
+      await newProfile.save()
+
+      const filteredProfile = await Profile.findOne({username},{experience: 0})
+      const unhashedPassword = await bcrypt.compare(password, filteredProfile.password)
+      delete filteredProfile._doc.password
+
+      if(unhashedPassword){
+        res.status(201).send(filteredProfile)
+        return
+      }
+      
     }
   } catch (error) {
     next(error)
