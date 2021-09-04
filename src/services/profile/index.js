@@ -6,12 +6,18 @@ const router = express.Router()
 router
   .route("/")
   .get(profile.getAll)
-  .post(profile.create)
-  
+
+router
+  .route("/register")
+  .post(profile.register)
+
+router
+  .route("/login")
+  .post(profile.login)
+
 
 router
   .route("/:profileID")
-  .get(profile.getSingle)
   .put(profile.update)
   .delete(profile.deleteSingle)
 
