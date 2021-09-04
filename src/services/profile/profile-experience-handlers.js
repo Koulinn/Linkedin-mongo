@@ -63,13 +63,31 @@ const uploadImage = async (req, res, next) => {
   }
 }
 
+const deleteXP = async (req, res, next) => {
+  try {
+    const { _id, _userId } = req.params
+    
+    const deleteExperience = await Profile.findByIdAndUpdate({ _id: _userId, "experience._id": _id },
+      {
+        $pull: {experience: {_id: _id} }
+      }
+    )
+
+    res.status(204).send()
+  } catch (error) {
+    next(error)
+  }
+}
+
+
 
 
 const experience = {
   addNewExperience: addNewExperience,
   getExperiences: getExperiences,
   update: update,
-  uploadImage: uploadImage
+  uploadImage: uploadImage,
+  deleteXP: deleteXP
 }
 
 export default experience

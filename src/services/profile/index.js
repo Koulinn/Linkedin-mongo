@@ -29,6 +29,7 @@ router
 router
   .route("/experience/:_userId/update/:_id") // experienceId 
   .put(experience.update)
+  .delete(experience.deleteXP)
 
   router
   .route("/experience/:_userId/update/:_id/image") // experienceId 
