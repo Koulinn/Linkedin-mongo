@@ -13,7 +13,7 @@ const getById = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { username, password } = req.body
-    const profiles = await Profile.findOne({username}, {experience: 0})
+    const profiles = await Profile.findOne({username}, {experience: 0, email: 0})
     if(profiles){
       const unhashedPassword = await bcrypt.compare(password, profiles.password)
       delete profiles._doc.password
@@ -45,7 +45,7 @@ const register = async (req, res, next) => {
       const newProfile = new Profile({...req.body, password: hashedPassword})
       await newProfile.save()
 
-      const filteredProfile = await Profile.findOne({username},{experience: 0})
+      const filteredProfile = await Profile.findOne({username},{experience: 0, email:0})
       const unhashedPassword = await bcrypt.compare(password, filteredProfile.password)
       delete filteredProfile._doc.password
 
@@ -62,11 +62,15 @@ const register = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const { profileID } = req.params
-    const updatedProfile = await Profile.findByIdAndUpdate(profileID, {...req.body}, {
+    const { _id } = req.params
+    const updatedProfile = await Profile.findByIdAndUpdate(_id, {...req.body}, {
       new: true
     })
     
+    delete updatedProfile._doc.password
+    delete updatedProfile._doc.experience
+    delete updatedProfile._doc.email
+
     res.send(updatedProfile)
   } catch (error) {
     next(error)

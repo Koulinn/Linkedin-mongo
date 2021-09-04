@@ -6,6 +6,7 @@ const router = express.Router()
 router
   .route("/:_id")
   .get(profile.getById)
+  .put(profile.update)
 
 router
   .route("/register")
@@ -18,7 +19,6 @@ router
 
 router
   .route("/:profileID")
-  .put(profile.update)
   .delete(profile.deleteSingle)
 
 
