@@ -12,12 +12,13 @@ const getAll = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { username, password } = req.body
-    const profiles = await Profile.find({username})
-    if(profiles.length> 0){
-      let loggedProfile = profiles.find(profile => profile.password === password)
-      if(loggedProfile){
-        const filteredProfile = await Profile.find({username, password},{ password: 0, experience: 0})
-        res.send(filteredProfile)
+    const profiles = await Profile.findOne({username}, {experience: 0})
+    if(profiles){
+      const unhashedPassword = await bcrypt.compare(password, profiles.password)
+      delete profiles._doc.password
+
+      if(unhashedPassword){
+        res.send(profiles)
       } else{
         res.status(401).send({msg: `Password doesn't match with ${username}`})
       }
