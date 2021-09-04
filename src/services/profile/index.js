@@ -2,6 +2,7 @@ import express from "express"
 import multer from "multer"
 import profile from "./profile-handlers.js"
 import lib from '../../lib/index.js'
+import experience from "./profile-experience-handlers.js"
 
 const router = express.Router()
 
@@ -18,6 +19,13 @@ router
 router
   .route("/login")
   .post(profile.login)
+
+router
+  .route("/experience/:_id") //User ID
+  .post(experience.addNewExperience)
+  router
+  .route("/experience/:_userId/update/:_id") // experienceId 
+  .put(experience.update)
 
 
 export default router
