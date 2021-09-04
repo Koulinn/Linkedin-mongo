@@ -5,8 +5,8 @@ import Profile from "../../db/models/Profile.js"
 const getExperiences = async (req, res, next) => {
   try {
     const {_id} = req.params
-    const experiences = await Profile.find({_id}, {experience: 1})
-    res.status(200).send(experiences)
+    const experiences = await Profile.findById({_id}, {experience: 1})
+    res.status(200).send(experiences.experience)
   } catch (error) {
     next(error)
   }

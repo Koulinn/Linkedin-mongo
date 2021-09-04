@@ -23,7 +23,10 @@ router
 router
   .route("/experience/:_id") //User ID
   .post(experience.addNewExperience)
-  router
+  .get(experience.getExperiences)
+
+  
+router
   .route("/experience/:_userId/update/:_id") // experienceId 
   .put(experience.update)
 
