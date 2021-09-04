@@ -36,7 +36,8 @@ const update = async (req, res, next) => {
       }
     )
 
-    const getUpdatedExperience = await Profile.findOne({_id: _userId, "experience.id": _id}, {"experience.$": 1})
+    const getUpdatedExperience = await Profile.findOne({_id: _userId, "experience._id": _id}, {"experience.$": 1})
+    
 
     res.send(getUpdatedExperience.experience[0])
   } catch (error) {
