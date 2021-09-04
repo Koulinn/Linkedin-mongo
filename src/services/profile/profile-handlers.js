@@ -13,9 +13,10 @@ const login = async (req, res, next) => {
     const { username, password } = req.body
     const profiles = await Profile.find({username})
     if(profiles.length> 0){
-      const loggedProfile = profiles.find(profile => profile.password === password)
+      let loggedProfile = profiles.find(profile => profile.password === password)
       if(loggedProfile){
-        res.send(loggedProfile)
+        const filteredProfile = await Profile.find({username, password},{ password: 0, experience: 0})
+        res.send(filteredProfile)
       } else{
         res.status(401).send({msg: `Password doesn't match with ${username}`})
       }
