@@ -10,6 +10,7 @@ const profileSchema = new Schema({
     surname: { type: String, required: true },
     title: { type: String, required: true },
     username: { type: String, required: true },
+    name: { type: String, required: true },
     image: { type: String },
     experience:[{
         area: { type: String },
