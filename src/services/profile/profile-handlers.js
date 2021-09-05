@@ -4,8 +4,8 @@ import bcrypt from 'bcrypt'
 const getById = async (req, res, next) => {
   try {
     const {_id} = req.params
-    const profiles = await Profile.find({_id}, {password: 0, experience: 0})
-    res.send(profiles)
+    const profile = await Profile.find({_id}, {password: 0, experience: 0})
+    res.send(profile[0])
   } catch (error) {
     next(error)
   }
