@@ -7,7 +7,7 @@ import experience from "./profile-experience-handlers.js"
 const router = express.Router()
 
 router
-  .route("/:_id")
+  .route("/me/:_id")
   .get(profile.getById)
   .put(profile.update)
   .post(multer({ storage: lib.cloudStorage }).single('image'), profile.uploadImage)
