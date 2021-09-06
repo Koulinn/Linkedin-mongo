@@ -5,8 +5,8 @@ import { dirname, join } from "path"
 import fs from "fs-extra"
 import { pipeline } from "stream"
 
-const { createReadStream } = fs
-const experienceJSONPath = join(dirname(fileURLToPath(import.meta.url)), "../../data/experiences.json")
+const { createReadStream, writeJSON } = fs
+
 
 const getExperiences = async (req, res, next) => {
   try {
@@ -91,12 +91,14 @@ const getExpCSV = async (req, res, next) => {
   try {
     const { _id } = req.params
     const profile = await Profile.findById({ _id })    
-    console.log(experienceJSONPath)
+    const experienceJSONPath = join(dirname(fileURLToPath(import.meta.url)), `../../data/${_id}.json`)
+    //console.log(experienceJSONPath)    
+    await writeJSON(experienceJSONPath, profile.experience)
     
-    const filename = "test.csv"
+    const filename = `${_id}.csv`
     res.setHeader("Content-Disposition", `attachment; filename=${filename}`) // this header tells the browser to open the "save file as" dialog
     const source = createReadStream(experienceJSONPath)
-    const transform = new json2csv.Transform({ fields: ["area", "company", "description", 
+    const transform = new json2csv.Transform({ fields: ['area', "company", "description", 
     "image", "role", "user", "endDate", "startDate"] })
     const destination = res
 
