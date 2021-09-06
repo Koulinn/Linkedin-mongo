@@ -2,6 +2,7 @@ import Profile from "../../db/models/Profile.js"
 
 
 
+
 const getExperiences = async (req, res, next) => {
   try {
     const { _id } = req.params
@@ -16,6 +17,7 @@ const getExperiences = async (req, res, next) => {
 const addNewExperience = async (req, res, next) => {
   try {
     const { _id } = req.params
+    console.log(req.headers)
     const getUser = await Profile.findByIdAndUpdate({ _id }, { $push: { experience: { ...req.body, user: _id } } }, { new: true })
 
     res.send(getUser.experience[getUser.experience.length - 1])
