@@ -1,5 +1,5 @@
 {
-  "name": "Linkedin-mongo",
+  "name": "linkedin-mongo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,6 +9,8 @@
     "cloudinary": "^1.26.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "fs-extra": "^10.0.0",
+    "json2csv": "^5.0.6",
     "mongoose": "^6.0.3",
     "multer": "^1.4.3",
     "multer-storage-cloudinary": "^4.0.0"
