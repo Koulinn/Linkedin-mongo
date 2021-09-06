@@ -5,13 +5,13 @@ const { Schema, model } = mongoose;
 const postSchema = new Schema(
   {
     text: { type: String, required: true },
-    user: { type: Schema.Types.ObjectId, ref: "User" },
+    user: { type: Schema.Types.ObjectId, ref: "Profile" },
     image: { type: String, required: false },
   },
   { timestamps: true }
 );
 
-export default model("User", postSchema);
+export default model("Post", postSchema);
 
 // name: {type: String},
 // surname: {type: String},
