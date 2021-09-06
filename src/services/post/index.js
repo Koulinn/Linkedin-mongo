@@ -1,6 +1,8 @@
 import { Router } from "express";
+import multer from "multer";
 import q2m from "query-to-mongo";
 import postModel from "../../db/models/post.js";
+import cloudStorage from "../../lib/cloud-storage.js";
 
 const postRouter = Router();
 
@@ -68,4 +70,39 @@ postRouter.delete("/:Id", async (req, res, next) => {
   }
 });
 
+postRouter.post(
+  "/:Id",
+  multer({ storage: cloudStorage }).single("image"),
+  async (req, res, next) => {
+    try {
+      const addImage = await postModel.findByIdAndUpdate(
+        req.params.Id,
+        { image: req.file.path },
+        { new: true }
+      );
+      if (addImage) {
+        res.status(200).send(addImage);
+      } else {
+        res.status(404).send(`${req.params.Id} NOT found!!`);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 export default postRouter;
+
+// postRouter.post("/:Id", multer({storage: cloudStorage}).single("image"), async (req, res, next) => {
+//     try {
+//   const { _id } = req.params
+//   const addImg = await postModel.findByIdAndUpdate(_id, {image: req.file.path}, {
+//     new: true
+//   })
+//   const addImg = await postModel.findByIdAndUpdate(req.params.)
+
+//   res.status(200).send(addImg)
+
+// } catch (error) {
+//   next(error)
+// }
