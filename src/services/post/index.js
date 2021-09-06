@@ -1,4 +1,5 @@
 import { Router } from "express";
+import q2m from "query-to-mongo";
 import postModel from "../../db/models/post.js";
 
 const postRouter = Router();
@@ -16,15 +17,14 @@ postRouter.post("/", async (req, res, next) => {
 });
 postRouter.get("/", async (req, res, next) => {
   try {
-    // const query = q2m(req.query);
-    // console.log(query);
-    // const total = await postModel.countDocuments(query.criteria); //will have to finsish the query when i get the posts
-    // const posts = await postModel
-    //   .find(query.criteria, query.options.fields)
-    //   .sort()
-    //   .skip()
-    //   .limit(3);
-    // res.send(posts);
+    const query = q2m(req.query);
+    console.log(query);
+    const posts = await postModel
+      .find(query.criteria, query.options.fields)
+      .sort()
+      .skip()
+      .limit(2);
+    res.send(posts);
   } catch (error) {
     next(error);
   }
@@ -35,10 +35,10 @@ postRouter.get("/:Id", async (req, res, next) => {
     if (post) {
       res.send(post);
     } else {
-      res.send(`blog ${req.params.Id} NOT found!!`);
+      res.send(`post ${req.params.Id} NOT found!!`);
     }
   } catch (error) {
-    next(createHttpError(404, `post ${req.params.Id} NOT found!!`));
+    next(error);
   }
 });
 postRouter.put("/:Id", async (req, res, next) => {
@@ -49,10 +49,10 @@ postRouter.put("/:Id", async (req, res, next) => {
     if (post) {
       res.send(post);
     } else {
-      res.send(`blog ${req.params.Id} NOT found!!`);
+      res.send(`post ${req.params.Id} NOT found!!`);
     }
   } catch (error) {
-    next(createHttpError(404, `post ${req.params.Id} NOT found!!`));
+    next();
   }
 });
 postRouter.delete("/:Id", async (req, res, next) => {

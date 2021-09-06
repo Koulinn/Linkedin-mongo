@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 
-const { Schema, model } = mongoose
+const { Schema, model } = mongoose;
 
-const profileSchema = new Schema({
+const profileSchema = new Schema(
+  {
     area: { type: String, required: true },
     bio: { type: String, required: true },
     email: { type: String, required: true },
@@ -12,19 +13,22 @@ const profileSchema = new Schema({
     username: { type: String, required: true },
     name: { type: String, required: true },
     image: { type: String },
-    experience:[{
+    experience: [
+      {
         area: { type: String },
         company: { type: String },
         description: { type: String },
         image: { type: String },
         role: { type: String },
-        user: { type: Schema.Types.ObjectId, ref: "User" },
-        endDate: {type: Date},
-        startDate: {type: Date},
-    }]
-    
-}, {
-    timestamps: true
-})
+        user: { type: Schema.Types.ObjectId, ref: "Profile" },
+        endDate: { type: Date },
+        startDate: { type: Date },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export default model('Profile', profileSchema)
+export default model("Profile", profileSchema);
