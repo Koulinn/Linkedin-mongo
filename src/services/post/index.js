@@ -1,11 +1,12 @@
 import { Router } from "express";
+import postModel from "../../db/models/post.js";
 
 const postRouter = Router();
 
 postRouter.post("/", async (req, res, next) => {
   try {
     console.log(req.body);
-    const post = await blogModel(req.body);
+    const post = await postModel(req.body);
     const { _id } = await post.save();
     res.status(201).send({ _id });
   } catch (error) {
@@ -18,8 +19,8 @@ postRouter.get("/", async (req, res, next) => {
     const query = q2m(req.query);
     console.log(query);
 
-    const total = await blogModel.countDocuments(query.criteria); //will have to finsish the query when i get the posts
-    const posts = await blogModel
+    const total = await postModel.countDocuments(query.criteria); //will have to finsish the query when i get the posts
+    const posts = await postModel
       .find(query.criteria, query.options.fields)
       .sort()
       .skip()
@@ -31,7 +32,7 @@ postRouter.get("/", async (req, res, next) => {
 });
 postRouter.get("/:Id", async (req, res, next) => {
   try {
-    const post = await blogModel.findById(req.params.Id);
+    const post = await postModel.findById(req.params.Id);
     if (post) {
       res.send(post);
     } else {
@@ -43,7 +44,7 @@ postRouter.get("/:Id", async (req, res, next) => {
 });
 postRouter.put("/:Id", async (req, res, next) => {
   try {
-    const post = await blogModel.findByIdAndUpdate(req.params.Id, req.body, {
+    const post = await postModel.findByIdAndUpdate(req.params.Id, req.body, {
       new: true,
     });
     if (post) {
@@ -57,7 +58,7 @@ postRouter.put("/:Id", async (req, res, next) => {
 });
 postRouter.delete("/:Id", async (req, res, next) => {
   try {
-    const post = await blogModel.findByIdAndDelete(req.params.Id);
+    const post = await postModel.findByIdAndDelete(req.params.Id);
     if (post) {
       res.status(204).send(`Deleted!!`);
     } else {
