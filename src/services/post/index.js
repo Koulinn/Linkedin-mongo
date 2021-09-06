@@ -37,7 +37,7 @@ postRouter.get("/:Id", async (req, res, next) => {
     if (post) {
       res.send(post);
     } else {
-      res.send(`post ${req.params.Id} NOT found!!`);
+      res.status(404).send(`post ${req.params.Id} NOT found!!`);
     }
   } catch (error) {
     next(error);
