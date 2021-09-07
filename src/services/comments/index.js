@@ -5,6 +5,8 @@ const commentRouter = Router();
 
 commentRouter.post("/", async (req, res, next) => {
   try {
+    const comment = await commentModel(req.body).save();
+    res.status(201).send(comment._id);
   } catch (error) {
     next(error);
   }
