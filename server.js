@@ -4,7 +4,6 @@ import lib from "./src/lib/index.js";
 import mongoose from "mongoose";
 import profileRouter from "./src/services/profile/index.js";
 import postRouter from "./src/services/post/index.js";
-import commentRouter from "./src/services/comments/index.js";
 
 const { errorHandlers, serverConfig } = lib;
 
@@ -16,7 +15,6 @@ server.use(cors(serverConfig));
 
 server.use("/profile", profileRouter);
 server.use("/posts", postRouter);
-server.use("/comments", commentRouter);
 
 server.use(errorHandlers.forbidden);
 server.use(errorHandlers.notFound);

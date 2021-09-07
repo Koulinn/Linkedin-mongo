@@ -1,6 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import q2m from "query-to-mongo";
+import createHttpError from "http-errors";
 import postModel from "../../db/models/post.js";
 import cloudStorage from "../../lib/cloud-storage.js";
 
@@ -22,6 +23,7 @@ postRouter.get("/", async (req, res, next) => {
     const query = q2m(req.query);
     console.log("the query ==>", query);
     const posts = await postModel
+      // .find({ text: "Additional" })
       .find(query.criteria, query.options.fields)
       .sort()
       .skip()
@@ -90,6 +92,109 @@ postRouter.post(
     }
   }
 );
+
+postRouter.post("/post/:id", async (req, res, next) => {
+  try {
+    const post = await postModel.findById(req.params.id);
+    if (post) {
+      const postComment = await postModel.findByIdAndUpdate(
+        req.params.id,
+        { $push: { comments: req.body } },
+        { new: true }
+      );
+      res.send(postComment);
+    } else {
+      next(
+        createHttpError(404, `The Post you are looking for does NOT exist!`)
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    next(createHttpError(404));
+  }
+});
+postRouter.get("/post/:id/comments", async (req, res, next) => {
+  try {
+    const post = await postModel.findById(req.params.id);
+    if (post) {
+      const allComments = post.comments;
+      res.send(allComments);
+    } else {
+      next(
+        createHttpError(404, `The Post you are looking for does NOT exist!`)
+      );
+    }
+  } catch (error) {
+    next(createHttpError(404));
+  }
+});
+postRouter.get("/post/:id/comments/:commentId", async (req, res, next) => {
+  try {
+    const post = await postModel.findById(req.params.id);
+    if (post) {
+      const comment = post.comments.find(
+        (com) => com._id.toString() === req.params.commentId
+      );
+      if (comment) {
+        res.send(comment);
+      } else {
+        next(
+          createHttpError(
+            404,
+            `The comment you are looking for does NOT exist!`
+          )
+        );
+      }
+    } else {
+      next(
+        createHttpError(404, `The Post you are looking for does NOT exist!`)
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    next(createHttpError(404));
+  }
+});
+postRouter.put("/post/:id/comments/:commentId", async (req, res, next) => {
+  try {
+    const comment = await postModel.findOneAndUpdate(
+      { _id: req.params.id, "comments.$.comment._id": req.params.commentId },
+      {
+        $set: {
+          "comments.$.comment": req.body,
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (comment) {
+      res.send(comment);
+    } else {
+      next(
+        createHttpError(404, `The Post you are looking for does NOT exist!`)
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    next(createHttpError(404));
+  }
+});
+postRouter.delete("/post/:id/comments/:commentId", async (req, res, next) => {
+  try {
+    const comment = await postModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $pull: {
+          comments: { _id: req.params.commentId },
+        },
+      },
+      { new: true }
+    );
+    res.send(comment);
+  } catch (error) {
+    next(createHttpError(404));
+  }
+});
 
 export default postRouter;
 
