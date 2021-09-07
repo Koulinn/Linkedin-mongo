@@ -158,10 +158,13 @@ postRouter.get("/post/:id/comments/:commentId", async (req, res, next) => {
 postRouter.put("/post/:id/comments/:commentId", async (req, res, next) => {
   try {
     const comment = await postModel.findOneAndUpdate(
-      { _id: req.params.id, "comments.$.comment._id": req.params.commentId },
+      // { _id: req.params.id, "comments.$._id": req.params.commentId },
+      { _id: req.params.id, "comments._id": req.params.commentId },
+
       {
         $set: {
-          "comments.$.comment": req.body,
+          // "comments.$.comment": req.body,
+          "comments.$": req.body,
         },
       },
       { new: true, runValidators: true }
