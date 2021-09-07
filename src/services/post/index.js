@@ -20,12 +20,12 @@ postRouter.post("/", async (req, res, next) => {
 postRouter.get("/", async (req, res, next) => {
   try {
     const query = q2m(req.query);
-    console.log(query);
+    console.log("the query ==>", query);
     const posts = await postModel
       .find(query.criteria, query.options.fields)
       .sort()
       .skip()
-      .limit(2);
+      .limit(10);
     res.send(posts);
   } catch (error) {
     next(error);
