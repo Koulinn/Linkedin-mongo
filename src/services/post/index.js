@@ -157,6 +157,7 @@ postRouter.get("/post/:id/comments/:commentId", async (req, res, next) => {
 });
 postRouter.put("/post/:id/comments/:commentId", async (req, res, next) => {
   try {
+    console.log("yes");
     const comment = await postModel.findOneAndUpdate(
       // { _id: req.params.id, "comments.$._id": req.params.commentId },
       { _id: req.params.id, "comments._id": req.params.commentId },
