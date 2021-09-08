@@ -63,5 +63,8 @@ router
   .route("/experience/:_userId/update/:_id/image") // experienceId 
   .put(multer({ storage: lib.cloudStorage }).single('image'), experience.uploadImage)
 
+  router
+  .route("/experience/:_id/CSV")
+  .get(experience.getExpCSV)  
 
 export default router
