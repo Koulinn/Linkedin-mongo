@@ -12,17 +12,17 @@ const profileSchema = new Schema({
     username: { type: String, required: true },
     name: { type: String, required: true },
     image: { type: String },
-    experience:[{
+    experience: [{
         area: { type: String },
         company: { type: String },
         description: { type: String },
         image: { type: String },
         role: { type: String },
         user: { type: Schema.Types.ObjectId, ref: "User" },
-        endDate: {type: Date},
-        startDate: {type: Date},
+        endDate: { type: Date },
+        startDate: { type: Date },
     }]
-    
+
 }, {
     timestamps: true
 })
