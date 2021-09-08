@@ -203,6 +203,11 @@ postRouter.delete("/post/:id/comments/:commentId", async (req, res, next) => {
 //Likes
 postRouter.post("/:postId/like", async (req, res, next) => {
   try {
+    const post = await postModel.findById(req.params.postId);
+    if (post) {
+    } else {
+      next(createHttpError(404, `post${req.params.postId} Not found!`));
+    }
   } catch (error) {
     next(error);
   }
