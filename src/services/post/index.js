@@ -1,4 +1,4 @@
-import { Router } from "express";
+import e, { Router } from "express";
 import multer from "multer";
 import q2m from "query-to-mongo";
 import createHttpError from "http-errors";
@@ -25,7 +25,7 @@ postRouter.get("/", async (req, res, next) => {
     const posts = await postModel
       // .find({ text: "Additional" })
       .find(query.criteria, query.options.fields)
-      .populate('user')
+      .populate("user")
       .sort()
       .skip()
       .limit(10);
@@ -198,6 +198,13 @@ postRouter.delete("/post/:id/comments/:commentId", async (req, res, next) => {
     res.send(comment);
   } catch (error) {
     next(createHttpError(404));
+  }
+});
+//Likes
+postRouter.post("/:postId/like", async (req, res, next) => {
+  try {
+  } catch (error) {
+    next(error);
   }
 });
 
