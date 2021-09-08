@@ -18,9 +18,9 @@ const profileSchema = new Schema({
         description: { type: String },
         image: { type: String },
         role: { type: String },
-        user: { type: Schema.Types.ObjectId, ref: "User" },
-        endDate: { type: Date },
-        startDate: { type: Date },
+        user: { type: Schema.Types.ObjectId, ref: "Profile" },
+        endDate: {type: Date},
+        startDate: {type: Date},
     }]
 
 }, {
