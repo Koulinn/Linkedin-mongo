@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 
-const { Schema, model } = mongoose
+const { Schema, model } = mongoose;
 
-const profileSchema = new Schema({
+const profileSchema = new Schema(
+  {
     area: { type: String, required: true },
     bio: { type: String, required: true },
     email: { type: String, required: true },
@@ -22,9 +23,8 @@ const profileSchema = new Schema({
         endDate: {type: Date},
         startDate: {type: Date},
     }]
-
 }, {
     timestamps: true
 })
 
-export default model('Profile', profileSchema)
+export default model("Profile", profileSchema);
