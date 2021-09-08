@@ -205,6 +205,18 @@ postRouter.post("/:postId/like", async (req, res, next) => {
   try {
     const post = await postModel.findById(req.params.postId);
     if (post) {
+      const postLike = post.likes.find(
+        (like) => like.userId == req.body.userId
+      );
+      if (!postLike) {
+        const like = await postModel.findByIdAndUpdate(
+          req.params.postId,
+          { $push: { likes: req.body } },
+          { new: true }
+        );
+        res.send(like);
+      } else {
+      }
     } else {
       next(createHttpError(404, `post${req.params.postId} Not found!`));
     }
