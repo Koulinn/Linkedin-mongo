@@ -1,10 +1,21 @@
 import Profile from "../../db/models/Profile.js"
 import bcrypt from 'bcrypt'
 
+
+const getAll = async (req, res, next) => {
+  try {
+    const allProfiles = await Profile.find()
+    res.send(allProfiles)
+  } catch (error) {
+    next(error)
+  }
+}
+
+
 const getById = async (req, res, next) => {
   try {
-    const {_id} = req.params
-    const profile = await Profile.find({_id}, {password: 0, experience: 0})
+    const { _id } = req.params
+    const profile = await Profile.find({ _id }, { password: 0, /* experience: 0 */ })
     res.send(profile[0])
   } catch (error) {
     next(error)
@@ -13,20 +24,20 @@ const getById = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { username, password } = req.body
-    const profiles = await Profile.findOne({username}, {experience: 0, email: 0})
-    if(profiles){
+    const profiles = await Profile.findOne({ username }, { experience: 0, email: 0 })
+    if (profiles) {
       const unhashedPassword = await bcrypt.compare(password, profiles.password)
       delete profiles._doc.password
 
-      if(unhashedPassword){
+      if (unhashedPassword) {
         res.send(profiles)
-      } else{
-        res.status(401).send({msg: `Password doesn't match with ${username}`})
+      } else {
+        res.status(401).send({ msg: `Password doesn't match with ${username}` })
       }
-    } else{
-      res.status(404).send({msg: `Username ${username} not found!`})
+    } else {
+      res.status(404).send({ msg: `Username ${username} not found!` })
     }
-    
+
 
   } catch (error) {
     console.log(error)
@@ -37,23 +48,23 @@ const login = async (req, res, next) => {
 const register = async (req, res, next) => {
   try {
     const { username, password } = req.body
-    const usernameAlreadyExists = await Profile.find({username})
-    if(usernameAlreadyExists.length > 0 ){
-      res.status(400).send({msg: `Username ${username} already in use please choose another one.`})
+    const usernameAlreadyExists = await Profile.find({ username })
+    if (usernameAlreadyExists.length > 0) {
+      res.status(400).send({ msg: `Username ${username} already in use please choose another one.` })
     } else {
       const hashedPassword = await bcrypt.hash(password, 10)
-      const newProfile = new Profile({...req.body, password: hashedPassword})
+      const newProfile = new Profile({ ...req.body, password: hashedPassword })
       await newProfile.save()
 
-      const filteredProfile = await Profile.findOne({username},{experience: 0, email:0})
+      const filteredProfile = await Profile.findOne({ username }, { experience: 0, email: 0 })
       const unhashedPassword = await bcrypt.compare(password, filteredProfile.password)
       delete filteredProfile._doc.password
 
-      if(unhashedPassword){
+      if (unhashedPassword) {
         res.status(201).send(filteredProfile)
         return
       }
-      
+
     }
   } catch (error) {
     next(error)
@@ -63,10 +74,10 @@ const register = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const { _id } = req.params
-    const updatedProfile = await Profile.findByIdAndUpdate(_id, {...req.body}, {
+    const updatedProfile = await Profile.findByIdAndUpdate(_id, { ...req.body }, {
       new: true
     })
-    
+
     delete updatedProfile._doc.password
     delete updatedProfile._doc.experience
     delete updatedProfile._doc.email
@@ -80,16 +91,16 @@ const update = async (req, res, next) => {
 const uploadImage = async (req, res, next) => {
   try {
     const { _id } = req.params
-    const updatedProfile = await Profile.findByIdAndUpdate(_id, {image: req.file.path}, {
+    const updatedProfile = await Profile.findByIdAndUpdate(_id, { image: req.file.path }, {
       new: true
     })
-    
+
     delete updatedProfile._doc.password
     delete updatedProfile._doc.experience
     delete updatedProfile._doc.email
-    
+
     res.status(200).send(updatedProfile)
-    
+
   } catch (error) {
     next(error)
   }
@@ -97,7 +108,12 @@ const uploadImage = async (req, res, next) => {
 
 
 
+
+
+
+
 const profile = {
+  getAll: getAll,
   register: register,
   getById: getById,
   login: login,
