@@ -21,10 +21,11 @@ postRouter.post("/", async (req, res, next) => {
 postRouter.get("/", async (req, res, next) => {
   try {
     const query = q2m(req.query);
-    console.log("the query ==>", query);
+    // console.log("the query ==>", query);
     const posts = await postModel
       // .find({ text: "Additional" })
       .find(query.criteria, query.options.fields)
+      .populate('user')
       .sort()
       .skip()
       .limit(10);
