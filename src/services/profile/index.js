@@ -6,35 +6,14 @@ import experience from "./profile-experience-handlers.js"
 import { getPDFReadableStream } from "../../lib/pdf/profileCV.js"
 import { pipeline } from "stream"
 import Profile from "../../db/models/Profile.js"
-import { signUpValidation } from "../../lib/service-validations.js"
+import { loginValidation, signUpValidation } from "../../lib/service-validations.js"
 
 const { validations } = lib
 
 
 const router = express.Router()
 
-
-router.get("/:_id/CV", async (req, res, next) => {
-  try {
-    const { _id } = req.params
-    const profile = await Profile.findOne({ _id })
-    if (!profile) {
-      return res.status(404).send()
-    }
-
-    const filename = "CV.pdf"
-    res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
-    const source = await getPDFReadableStream(profile)
-    const destination = res
-    pipeline(source, destination, err => {
-      if (err) next(err)
-    })
-  } catch (error) {
-    next(error)
-  }
-})
-
-
+router.route("/:_id/CV").get(profile.getPdf)
 router.route("/").get(profile.getAll)
 
 router
@@ -49,7 +28,7 @@ router
 
 router
   .route("/login")
-  .post(profile.login)
+  .post(loginValidation, profile.login)
 
 router
   .route("/experience/:_id") //User ID

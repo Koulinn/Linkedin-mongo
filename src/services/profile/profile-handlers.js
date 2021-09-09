@@ -3,6 +3,28 @@ import bcrypt from 'bcrypt'
 import { validationResult } from "express-validator";
 
 
+const getPdf = async (req, res, next) => {
+  try {
+    const { _id } = req.params
+    const profile = await Profile.findOne({ _id })
+    if (!profile) {
+      return res.status(404).send()
+    }
+
+    const filename = "CV.pdf"
+    res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
+    const source = await getPDFReadableStream(profile)
+    const destination = res
+    pipeline(source, destination, err => {
+      if (err) next(err)
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+
 const getAll = async (req, res, next) => {
   try {
     const allProfiles = await Profile.find()
@@ -24,6 +46,10 @@ const getById = async (req, res, next) => {
 }
 const login = async (req, res, next) => {
   try {
+    const errorList = validationResult(req)
+    if (!errorList.isEmpty()) {
+      return res.status(400).send({ msg: errorList })
+    }
     const { username, password } = req.body
     const profiles = await Profile.findOne({ username }, { experience: 0, email: 0 })
     if (profiles) {
@@ -49,31 +75,31 @@ const login = async (req, res, next) => {
 const register = async (req, res, next) => {
   try {
     const errorList = validationResult(req)
-    if(!errorList.isEmpty()){
-      res.status(400).send({msg: errorList})
+    if (!errorList.isEmpty()) {
+      return res.status(400).send({ msg: errorList })
       // next({msg: errorList})
+    }
+    const { username, password } = req.body
+    const usernameAlreadyExists = await Profile.find({ username })
+    if (usernameAlreadyExists.length > 0) {
+      res.status(400).send({ msg: `Username ${username} already in use please choose another one.` })
     } else {
-      const { username, password } = req.body
-      const usernameAlreadyExists = await Profile.find({ username })
-      if (usernameAlreadyExists.length > 0) {
-        res.status(400).send({ msg: `Username ${username} already in use please choose another one.` })
-      } else {
-        const hashedPassword = await bcrypt.hash(password, 10)
-        const newProfile = new Profile({ ...req.body, password: hashedPassword })
-        await newProfile.save()
-  
-        const filteredProfile = await Profile.findOne({ username }, { experience: 0, email: 0 })
-        const unhashedPassword = await bcrypt.compare(password, filteredProfile.password)
-        delete filteredProfile._doc.password
-  
-        if (unhashedPassword) {
-          res.status(201).send(filteredProfile)
-          return
-        }
-  
+      const hashedPassword = await bcrypt.hash(password, 10)
+      const newProfile = new Profile({ ...req.body, password: hashedPassword })
+      await newProfile.save()
+
+      const filteredProfile = await Profile.findOne({ username }, { experience: 0, email: 0 })
+      const unhashedPassword = await bcrypt.compare(password, filteredProfile.password)
+      delete filteredProfile._doc.password
+
+      if (unhashedPassword) {
+        res.status(201).send(filteredProfile)
+        return
       }
 
     }
+
+
 
 
   } catch (error) {
@@ -83,6 +109,9 @@ const register = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
+    if (!errorList.isEmpty()) {
+      return res.status(400).send({ msg: errorList })
+    }
     const { _id } = req.params
     const updatedProfile = await Profile.findByIdAndUpdate(_id, { ...req.body }, {
       new: true
@@ -123,6 +152,7 @@ const uploadImage = async (req, res, next) => {
 
 
 const profile = {
+  getPdf: getPdf,
   getAll: getAll,
   register: register,
   getById: getById,
