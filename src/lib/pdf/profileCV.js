@@ -59,7 +59,7 @@ export const getPDFReadableStream = async (profile) => {
 
             width: 170,
             text: "\n Contact \n \n" +
-              "Email:" + profile.email
+              "Email: \n" + profile.email
 
           },
           {

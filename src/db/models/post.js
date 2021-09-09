@@ -7,7 +7,21 @@ const postSchema = new Schema(
     text: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: "Profile" },
     image: { type: String, required: false },
-    comments: [{ comment: String }],
+    likes: [
+      {
+        userId: { type: Schema.Types.ObjectId, ref: "Profile", required: true },
+      },
+    ],
+    comments: [
+      {
+        comment: { type: String },
+        user: { type: Schema.Types.ObjectId, ref: "Profile", required: true },
+        name: { type: String },
+        image: { type: String },
+        createdAt: { type: Date, required: true, default: Date.now },
+        updatedAt: { type: Date, required: true, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );
