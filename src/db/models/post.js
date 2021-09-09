@@ -16,8 +16,8 @@ const postSchema = new Schema(
       {
         comment: { type: String },
         user: { type: Schema.Types.ObjectId, ref: "Profile", required: true },
-        // name: { type: String },
-        // image: { type: String },
+        name: { type: String },
+        image: { type: String },
         createdAt: { type: Date, required: true, default: Date.now },
         updatedAt: { type: Date, required: true, default: Date.now },
       },
