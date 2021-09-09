@@ -6,7 +6,10 @@ import experience from "./profile-experience-handlers.js"
 import { getPDFReadableStream } from "../../lib/pdf/profileCV.js"
 import { pipeline } from "stream"
 import Profile from "../../db/models/Profile.js"
+import { signUpValidation } from "../../lib/service-validations.js"
+
 const { validations } = lib
+
 
 const router = express.Router()
 
@@ -42,7 +45,7 @@ router
 
 router
   .route("/register")
-  .post(profile.register)
+  .post(signUpValidation, profile.register)
 
 router
   .route("/login")
@@ -63,8 +66,8 @@ router
   .route("/experience/:_userId/update/:_id/image") // experienceId 
   .put(multer({ storage: lib.cloudStorage }).single('image'), experience.uploadImage)
 
-  router
+router
   .route("/experience/:_id/CSV")
-  .get(experience.getExpCSV)  
+  .get(experience.getExpCSV)
 
 export default router
