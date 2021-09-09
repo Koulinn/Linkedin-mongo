@@ -1,9 +1,7 @@
-
 import q2m from "query-to-mongo";
 import createHttpError from "http-errors";
 import postModel from "../../db/models/post.js";
-
-
+// import profileModel from "../../db/models/Profile.js"
 
 const postAPost = async (req, res, next) => {
   try {
@@ -24,7 +22,7 @@ const getPosts = async (req, res, next) => {
     const posts = await postModel
       // .find({ text: "Additional" })
       .find(query.criteria, query.options.fields)
-      .populate('user')
+      .populate("user")
       .sort()
       .skip()
       .limit(10);
@@ -32,7 +30,7 @@ const getPosts = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 const getById = async (req, res, next) => {
   try {
@@ -45,7 +43,7 @@ const getById = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 const updatePost = async (req, res, next) => {
   try {
@@ -60,7 +58,7 @@ const updatePost = async (req, res, next) => {
   } catch (error) {
     next();
   }
-}
+};
 
 const deletePost = async (req, res, next) => {
   try {
@@ -73,7 +71,7 @@ const deletePost = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 const postImage = async (req, res, next) => {
   try {
@@ -90,7 +88,7 @@ const postImage = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 const postComment = async (req, res, next) => {
   try {
@@ -111,7 +109,7 @@ const postComment = async (req, res, next) => {
     console.log(error);
     next(createHttpError(404));
   }
-}
+};
 
 const getPostComments = async (req, res, next) => {
   try {
@@ -127,7 +125,7 @@ const getPostComments = async (req, res, next) => {
   } catch (error) {
     next(createHttpError(404));
   }
-}
+};
 
 const getCommentAndPost = async (req, res, next) => {
   try {
@@ -155,7 +153,7 @@ const getCommentAndPost = async (req, res, next) => {
     console.log(error);
     next(createHttpError(404));
   }
-}
+};
 
 const updateComment = async (req, res, next) => {
   try {
@@ -184,7 +182,7 @@ const updateComment = async (req, res, next) => {
     console.log(error);
     next(createHttpError(404));
   }
-}
+};
 
 const deleteComment = async (req, res, next) => {
   try {
@@ -201,7 +199,7 @@ const deleteComment = async (req, res, next) => {
   } catch (error) {
     next(createHttpError(404));
   }
-}
+};
 
 const post = {
   postAPost: postAPost,
@@ -214,7 +212,7 @@ const post = {
   getPostComments: getPostComments,
   getCommentAndPost: getCommentAndPost,
   updateComment: updateComment,
-  deleteComment: deleteComment
-}
+  deleteComment: deleteComment,
+};
 
-export default post
+export default post;
