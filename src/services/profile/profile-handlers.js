@@ -1,6 +1,8 @@
 import Profile from "../../db/models/Profile.js"
 import bcrypt from 'bcrypt'
 import { validationResult } from "express-validator";
+import { getPDFReadableStream } from "../../lib/pdf/profileCV.js"
+import { pipeline } from "stream"
 
 
 const getPdf = async (req, res, next) => {
@@ -109,9 +111,9 @@ const register = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    if (!errorList.isEmpty()) {
-      return res.status(400).send({ msg: errorList })
-    }
+    // if (!errorList.isEmpty()) {
+    //   return res.status(400).send({ msg: errorList })
+    // }
     const { _id } = req.params
     const updatedProfile = await Profile.findByIdAndUpdate(_id, { ...req.body }, {
       new: true
