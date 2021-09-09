@@ -101,7 +101,12 @@ const postComment = async (req, res, next) => {
 
         {
           $push: {
-            comments: {},
+            comments: {
+              comment: req.body.comment,
+              user: req.body.user,
+              name: profile.name,
+              image: profile.image,
+            },
           },
         },
 
@@ -224,8 +229,3 @@ const post = {
 };
 
 export default post;
-
-//comment: req.body.comment,
-// user: req.body.user,
-// name: profile.name,
-// image: profile.image,
