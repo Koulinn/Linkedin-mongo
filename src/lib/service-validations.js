@@ -11,7 +11,10 @@ export const signUpValidation = [
     body("username").exists().withMessage("Username is mandatory").notEmpty().withMessage('Needed to login'),
 ]
 
-
+export const loginValidation = [
+    body("username").exists().withMessage("Username is mandatory").notEmpty().withMessage('Must not be empty'),
+    body("password").exists().withMessage("Password is mandatory").notEmpty().withMessage('Must not be empty')
+]
 
 
 
