@@ -1,7 +1,8 @@
 import q2m from "query-to-mongo";
 import createHttpError from "http-errors";
 import postModel from "../../db/models/post.js";
-// import profileModel from "../../db/models/Profile.js"
+import profileModel from "../../db/models/Profile.js";
+import Profile from "../../db/models/Profile.js";
 
 const postAPost = async (req, res, next) => {
   try {
@@ -92,22 +93,29 @@ const postImage = async (req, res, next) => {
 
 const postComment = async (req, res, next) => {
   try {
+    const profile = await profileModel.findById(req.body.user);
     const post = await postModel.findById(req.params.id);
     if (post) {
       const postComment = await postModel.findByIdAndUpdate(
         req.params.id,
-        { $push: { comments: req.body } },
+
+        {
+          $push: {
+            comments: {},
+          },
+        },
+
         { new: true }
       );
       res.send(postComment);
-    } else {
-      next(
-        createHttpError(404, `The Post you are looking for does NOT exist!`)
-      );
+      // } else {
+      //   next(
+      //     createHttpError(404, `The Post you are looking for does NOT exist!`)
+      //   );
     }
   } catch (error) {
     console.log(error);
-    next(createHttpError(404));
+    // next(createHttpError(404));
   }
 };
 
@@ -216,3 +224,8 @@ const post = {
 };
 
 export default post;
+
+//comment: req.body.comment,
+// user: req.body.user,
+// name: profile.name,
+// image: profile.image,
