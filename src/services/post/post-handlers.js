@@ -23,7 +23,10 @@ const getPosts = async (req, res, next) => {
     const posts = await postModel
       // .find({ text: "Additional" })
       .find(query.criteria, query.options.fields)
-      .populate("user")
+      .populate({
+        path:"user",
+        select:[ '_id', 'name', 'image']
+      })
       .populate({ 
         path: 'comments',
         populate: {
