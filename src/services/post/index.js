@@ -19,5 +19,6 @@ postRouter.route("/post/:id/comments").get(post.getPostComments);
 postRouter.route("/post/:id/comments/:commentId").get(post.getCommentAndPost);
 postRouter.route("/post/:id/comments/:commentId").put(post.updateComment);
 postRouter.route("/post/:id/comments/:commentId").delete(post.deleteComment);
+postRouter.route("/:postId/like").post(post.likePost);
 
 export default postRouter;
