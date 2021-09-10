@@ -112,7 +112,8 @@ const postComment = async (req, res, next) => {
 
         { new: true }
       );
-      res.send(postComment);
+      const comments = postComment.comments;
+      res.send(comments[comments.length - 1]);
       // } else {
       //   next(
       //     createHttpError(404, `The Post you are looking for does NOT exist!`)
@@ -208,9 +209,41 @@ const deleteComment = async (req, res, next) => {
       },
       { new: true }
     );
-    res.send(comment);
+    res.send(
+      `${req.params.commentId} comment at post ${req.params.id} is deleted!`
+    );
   } catch (error) {
     next(createHttpError(404));
+  }
+};
+
+const likePost = async (req, res, next) => {
+  try {
+    const post = await postModel.findById(req.params.postId);
+    if (post) {
+      const postLike = post.likes.find(
+        (like) => like.userId == req.body.userId
+      );
+      if (!postLike) {
+        const like = await postModel.findByIdAndUpdate(
+          req.params.postId,
+          { $push: { likes: req.body } },
+          { new: true }
+        );
+        res.send(like);
+      } else {
+        const like = await postModel.findByIdAndUpdate(
+          req.params.postId,
+          { $pull: { likes: req.body } },
+          { new: true }
+        );
+        res.send(like);
+      }
+    } else {
+      next(createHttpError(404, `post${req.params.postId} Not found!`));
+    }
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -226,6 +259,7 @@ const post = {
   getCommentAndPost: getCommentAndPost,
   updateComment: updateComment,
   deleteComment: deleteComment,
+  likePost: likePost,
 };
 
 export default post;
