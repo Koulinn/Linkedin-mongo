@@ -209,7 +209,9 @@ const deleteComment = async (req, res, next) => {
       },
       { new: true }
     );
-    res.send(comment);
+    res.send(
+      `${req.params.commentId} comment at post ${req.params.id} is deleted!`
+    );
   } catch (error) {
     next(createHttpError(404));
   }
