@@ -112,7 +112,8 @@ const postComment = async (req, res, next) => {
 
         { new: true }
       );
-      res.send(postComment);
+      const comments = postComment.comments;
+      res.send(comments[comments.length - 1]);
       // } else {
       //   next(
       //     createHttpError(404, `The Post you are looking for does NOT exist!`)
