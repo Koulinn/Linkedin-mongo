@@ -24,6 +24,14 @@ const getPosts = async (req, res, next) => {
       // .find({ text: "Additional" })
       .find(query.criteria, query.options.fields)
       .populate("user")
+      .populate({ 
+        path: 'comments',
+        populate: {
+          path: 'user',
+          model: 'Profile',
+          select: ['name', 'image']
+        }, 
+     })
       .sort()
       .skip()
       .limit(10);
