@@ -7,13 +7,14 @@ import { pipeline } from "stream"
 
 const getPdf = async (req, res, next) => {
   try {
+    console.log('Someone requested a PDF download')
     const { _id } = req.params
     const profile = await Profile.findOne({ _id })
     if (!profile) {
       return res.status(404).send()
     }
 
-    const filename = "CV.pdf"
+    const filename =  _id + "CV.pdf"
     res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
     const source = await getPDFReadableStream(profile)
     const destination = res
@@ -59,6 +60,7 @@ const login = async (req, res, next) => {
       delete profiles._doc.password
 
       if (unhashedPassword) {
+        console.log('Someone has logged')
         res.send(profiles)
       } else {
         res.status(401).send({ msg: `Password doesn't match with ${username}` })
