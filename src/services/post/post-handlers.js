@@ -20,10 +20,20 @@ const getPosts = async (req, res, next) => {
   try {
     const query = q2m(req.query);
     // console.log("the query ==>", query);
-    const posts = await postModel
-      // .find({ text: "Additional" })
-      .find(query.criteria, query.options.fields)
-      .populate("user")
+    const posts = await postModel.find()
+      .populate({
+        path:"user",
+        select:[ '_id', 'name', 'image']
+
+      })
+      .populate({ 
+        path: 'comments',
+        populate: {
+          path: 'user',
+          model: 'Profile',
+          select: ['name', 'image']
+        }, 
+     })
       .sort()
       .skip()
       .limit(10);
