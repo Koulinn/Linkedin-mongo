@@ -23,7 +23,7 @@ const getPosts = async (req, res, next) => {
     const posts = await postModel.find()
       .populate({
         path:"user",
-        select:[ '_id', 'name', 'image']
+        select:[ '_id', 'name', 'image', 'surname']
 
       })
       .populate({ 
