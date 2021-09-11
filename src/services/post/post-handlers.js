@@ -186,14 +186,12 @@ const getCommentAndPost = async (req, res, next) => {
 
 const updateComment = async (req, res, next) => {
   try {
-    console.log("yes");
     const comment = await postModel.findOneAndUpdate(
       // { _id: req.params.id, "comments.$._id": req.params.commentId },
       { _id: req.params.id, "comments._id": req.params.commentId },
 
       {
         $set: {
-          // "comments.$.comment": req.body,
           "comments.$": req.body,
         },
       },
